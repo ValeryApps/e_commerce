@@ -1,35 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_commerce/models/product.dart';
 import 'package:e_commerce/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
-  @required
-  final String id;
-  @required
-  final String imageUrl;
-  @required
-  final String title;
-  @required
-  final double price;
-
-  const ProductItem({
-    Key key,
-    this.id,
-    this.imageUrl,
-    this.title,
-    this.price,
-  }) : super(key: key);
-
-  void onTap(BuildContext context) {
-    print('your ');
-    Navigator.of(context)
-        .pushNamed(ProductDetailsScreen.routeName, arguments: id);
-  }
-
   @override
   Widget build(BuildContext context) {
+    final Product product = Provider.of<Product>(context);
+    void onTap() {
+      print('your ');
+      Navigator.of(context)
+          .pushNamed(ProductDetailsScreen.routeName, arguments: product.id);
+    }
+
     return Container(
-      height: 400,
+      height: 410,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         margin: EdgeInsets.symmetric(
@@ -39,7 +25,8 @@ class ProductItem extends StatelessWidget {
         child: Column(
           children: <Widget>[
             InkWell(
-              onTap: () => onTap,
+              splashColor: Colors.white30,
+              onTap: onTap,
               child: Stack(
                 children: [
                   ClipRRect(
@@ -49,7 +36,7 @@ class ProductItem extends StatelessWidget {
                     child: CachedNetworkImage(
                       height: 300,
                       width: double.infinity,
-                      imageUrl: imageUrl,
+                      imageUrl: product.imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -57,7 +44,7 @@ class ProductItem extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.all(20),
                       child: Text(
-                        title,
+                        product.title,
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.white,
@@ -77,20 +64,30 @@ class ProductItem extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Icon(
-                      Icons.favorite,
-                      color: Colors.pink,
-                      size: 40,
+                    IconButton(
+                      icon: Icon(
+                        product.isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: Colors.pink,
+                        size: 40,
+                      ),
+                      onPressed: () {
+                        product.toggleIsFavorite();
+                      },
                     ),
                     Text(
-                      "price: $price\$",
+                      "price: ${product.price}\$",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
-                    Icon(
-                      Icons.shopping_cart,
-                      color: Colors.blue,
-                      size: 40,
+                    IconButton(
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: Colors.blue,
+                        size: 40,
+                      ),
+                      onPressed: () {},
                     )
                   ],
                 ),
