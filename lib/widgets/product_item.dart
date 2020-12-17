@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Product product = Provider.of<Product>(context);
+    final Product product = Provider.of<Product>(context, listen: false);
     void onTap() {
       print('your ');
       Navigator.of(context)
@@ -64,17 +64,19 @@ class ProductItem extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        product.isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: Colors.pink,
-                        size: 40,
+                    Consumer<Product>(
+                      builder: (cxt, product, child) => IconButton(
+                        icon: Icon(
+                          product.isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: Colors.pink,
+                          size: 40,
+                        ),
+                        onPressed: () {
+                          product.toggleIsFavorite();
+                        },
                       ),
-                      onPressed: () {
-                        product.toggleIsFavorite();
-                      },
                     ),
                     Text(
                       "price: ${product.price}\$",
