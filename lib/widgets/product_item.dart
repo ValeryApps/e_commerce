@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/models/product.dart';
+import 'package:e_commerce/providers/cart_provider.dart';
 import 'package:e_commerce/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -83,13 +84,18 @@ class ProductItem extends StatelessWidget {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.blue,
-                        size: 40,
+                    Consumer<CartProvider>(
+                      builder: (ctx, cart, _) => IconButton(
+                        icon: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.blue,
+                          size: 40,
+                        ),
+                        onPressed: () {
+                          cart.addProduct(
+                              product.id, product.price, product.title);
+                        },
                       ),
-                      onPressed: () {},
                     )
                   ],
                 ),
