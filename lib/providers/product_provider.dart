@@ -9,15 +9,28 @@ class ProductProvider with ChangeNotifier {
     return [..._productItems];
   }
 
-  void addProduct() {
+  void addProduct(Product product) {
+    _productItems.add(product);
+    notifyListeners();
+  }
+
+  void editProduct(String id, Product product) {
+    int productIndex = _productItems.indexWhere((element) => element.id == id);
+    _productItems.removeAt(productIndex);
+    _productItems.insert(productIndex, product);
     notifyListeners();
   }
 
   Product findProductById(String id) {
-    return productItems.firstWhere((prod) => prod.id == id);
+    return _productItems.firstWhere((prod) => prod.id == id);
   }
 
   List<Product> get favoriteProducts {
-    return productItems.where((prod) => prod.isFavorite).toList();
+    return _productItems.where((prod) => prod.isFavorite).toList();
+  }
+
+  void deleteProduct(String id) {
+    _productItems.removeWhere((element) => element.id == id);
+    notifyListeners();
   }
 }
